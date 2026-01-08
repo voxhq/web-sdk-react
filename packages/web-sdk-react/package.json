@@ -1,6 +1,6 @@
 {
   "name": "@voxhq/web-sdk-react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "license": "MIT",
   "repository": {
@@ -31,7 +31,7 @@
     "react-dom": ">=18"
   },
   "dependencies": {
-    "@voxhq/web-sdk": "^0.0.1",
+    "@voxhq/web-sdk": "^0.0.2",
     "lucide-react": "^0.562.0",
     "react-markdown": "^9.0.1",
     "remark-gfm": "^4.0.0"

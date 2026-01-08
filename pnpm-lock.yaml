@@ -69,8 +69,8 @@ importers:
   packages/web-sdk-react:
     dependencies:
       '@voxhq/web-sdk':
-        specifier: ^0.0.1
-        version: 0.0.1
+        specifier: ^0.0.2
+        version: 0.0.2
       lucide-react:
         specifier: ^0.562.0
         version: 0.562.0(react@19.2.3)
@@ -753,8 +753,8 @@ packages:
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
-  '@voxhq/web-sdk@0.0.1':
-    resolution: {integrity: sha512-yQtkapHPFb+SdAU01qY5vQNe6IEaa+uHcpM0svuQaJUvBd1EWHRiRS08HEb7srtQWl1MZLO7RvYowwVhnkapAA==}
+  '@voxhq/web-sdk@0.0.2':
+    resolution: {integrity: sha512-7rjVEVADM26U3mgCIr0FVpxyNQ8/b4YG39t7U5jUQxjwQsjPJJJlkiA0TJXlI1GgGSRKO8oekEsqUnwvM/5fng==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -2364,7 +2364,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@voxhq/web-sdk@0.0.1':
+  '@voxhq/web-sdk@0.0.2':
     dependencies:
       idb: 8.0.3
       rxjs: 7.8.2
