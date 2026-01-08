@@ -61,12 +61,10 @@ export function VoxProvider(props: VoxProviderProps) {
     dispatch({ type: "START_RECORDING" });
 
     try {
-      console.log("VoxProvider: Starting recording for session", sessionId);
       client.start(sessionId);
       // 2. Confirmation transition to 'recording'
       dispatch({ type: "RECORDING_STARTED" });
     } catch (err: any) {
-      console.error("VoxProvider: Failed to start recording", err);
       dispatch({ type: "ERROR", error: err });
     }
   }, [client, sessionId]);
