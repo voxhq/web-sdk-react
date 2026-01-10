@@ -1,5 +1,5 @@
 import type { Note } from "@voxhq/web-sdk";
-import type { VoxState } from "./types";
+import type { VoxState, SessionStatus } from "./types";
 
 // Internal Action Types
 export type VoxAction =
@@ -8,7 +8,7 @@ export type VoxAction =
   | { type: "RECORDING_STARTED" }
   | { type: "STOP_RECORDING" }
   | { type: "UPDATE_NOTES"; notes: Note[] }
-  | { type: "UPDATE_STATUS"; status: string } // Raw string from backend
+  | { type: "UPDATE_STATUS"; status: SessionStatus }
   | { type: "ERROR"; error: Error };
 
 export const initialState: VoxState = { status: "idle", notes: [] };
@@ -49,10 +49,10 @@ export function voxReducer(state: VoxState, action: VoxAction): VoxState {
 
       // // Map backend status strings to our clean FSM
       const s = action.status;
-      if (s === "completed" || s === "ready") {
+      if (s === "completed") {
         return { status: "ready", notes: state.notes };
       }
-      if (s === "writing" || s === "processing" || s === "generating") {
+      if (s === "writing" || s === "processing") {
         return { status: "writing", notes: state.notes };
       }
       return state;

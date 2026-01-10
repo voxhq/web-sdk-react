@@ -92,13 +92,13 @@ export function VoxProvider(props: VoxProviderProps) {
     // Reset before subscribing to new session data
     dispatch({ type: "RESET" });
 
-    const unsubscribe = client.subscribe(sessionId, {
-      onNotes: (ns) => dispatch({ type: "UPDATE_NOTES", notes: ns }),
-      onError: (e) => dispatch({ type: "ERROR", error: e }),
-      onStatus: (s) => dispatch({ type: "UPDATE_STATUS", status: s })
-    });
+    const unsubscribe = [
+      client.on('notes', (ns) => dispatch({ type: "UPDATE_NOTES", notes: ns })),
+      client.on('error', (e) => dispatch({ type: "ERROR", error: e })),
+      client.on('status', (s) => dispatch({ type: "UPDATE_STATUS", status: s })),
+    ];
 
-    return () => unsubscribe?.();
+    return () => unsubscribe.forEach(u => u());
   }, [client, sessionId]);
 
   // --- Context Value ---
