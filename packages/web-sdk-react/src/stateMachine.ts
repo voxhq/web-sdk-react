@@ -1,5 +1,5 @@
-import type { Note } from "@voxhq/web-sdk";
-import type { VoxState, SessionStatus } from "./types";
+import type { Note, SessionStatus } from "@voxhq/web-sdk";
+import type { VoxState } from "./types";
 
 // Internal Action Types
 export type VoxAction =
