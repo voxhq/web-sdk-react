@@ -53,9 +53,9 @@ export function VoxNoteList(props: VoxNoteListProps) {
   }
 
   return (
-    <div className={cn("grid gap-4 md:grid-cols-[280px_1fr]", className)} {...rest}>
+    <div className={cn("grid gap-4 ", className)} {...rest}>
       {/* List panel */}
-      <div className="rounded-xl border bg-background">
+      {/* <div className="rounded-xl border bg-background">
         <div className="border-b px-3 py-2 text-sm font-medium">{listTitle}</div>
         <div className="p-2">
           {notes.length === 0 ? (
@@ -95,18 +95,18 @@ export function VoxNoteList(props: VoxNoteListProps) {
             </div>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* Preview panel */}
       {showPreview ? (
         <div className="rounded-xl border bg-background">
           <div className="border-b px-3 py-2 text-sm font-medium">
-            {previewTitle ?? active?.name ?? "Preview"}
+            {previewTitle ?? active?.name ?? "Notes Preview"}
           </div>
 
           <div className="p-4">
             {!active ? (
-              <div className="text-sm text-muted-foreground">Select a note to preview.</div>
+              <div className="text-sm text-muted-foreground">Start a session to capture notes.</div>
             ) : active.status !== "ready" ? (
               <div className="text-sm text-muted-foreground">
                 This note is {active.status}.

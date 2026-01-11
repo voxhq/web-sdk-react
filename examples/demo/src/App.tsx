@@ -46,18 +46,30 @@ function DemoControls({ sessionId }: { sessionId: string }) {
           <label className="mb-1 block text-xs text-muted-foreground">
             Current State
           </label>
-          <select
-            onChange={handleStateChange}
-            defaultValue="checked_in"
-            className="w-full appearance-none rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-          >
-            <option value="checked_in">Checked In (Idle)</option>
-            <option value="in_appointment">In Appointment (Recording)</option>
-            <option value="checking_out">Checking Out (Stopped)</option>
-          </select>
-          <p className="mt-2 text-xs text-muted-foreground">
-            * Selecting "In Appointment" calls <code>vox.start()</code>
-          </p>
+          <div className="relative">
+            <select
+              onChange={handleStateChange}
+              defaultValue="checked_in"
+              className="w-full appearance-none rounded-lg border bg-background px-3 pr-10 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+            >
+              <option value="checked_in">Checked In (Idle)</option>
+              <option value="in_appointment">In Appointment (Recording)</option>
+              <option value="checking_out">Checking Out (Stopped)</option>
+            </select>
+            <svg 
+              className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none h-4 w-4 text-gray-400"
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+          <ul className="mt-2 list-disc list-inside text-xs text-gray-400 italic">
+            <li>"In Appointment" calls <code>vox.start()</code></li>
+            <li>"Checking Out" calls <code>vox.stop()</code></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -93,8 +105,8 @@ function VoxSession({ token, sessionId }: { token: string, sessionId: string }) 
           <DemoControls sessionId={sessionId} />
           
           <div className="mt-6 rounded-xl border border-blue-100 bg-blue-50/50 p-5">
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-wide text-blue-600">
-              SDK Component: Widget
+            <h3 className="mb-4 text-xs font-semibold tracking-wide text-blue-600">
+              COMPONENT: VoxWidget 
             </h3>
             <VoxWidget
               showPreview={false}
@@ -123,6 +135,9 @@ function Header() {
       <h1 className="text-2xl font-semibold">Vox Web SDK React Example</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Demonstration of <code className="font-mono">@voxhq/web-sdk-react</code>
+      </p>
+      <p className="mt-3 text-xs text-muted-foreground">
+        Select "In Appointment" to start capturing, then "Checking Out" to stop and generate notes.
       </p>
     </header>
   );
