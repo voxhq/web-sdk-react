@@ -84,6 +84,11 @@ export function VoxProvider(props: VoxProviderProps) {
     }
   }, [state.status, start, stop]);
 
+  const getAnalyzerBandLevels = useCallback((bands: number) => {
+    if (!client) return new Float32Array(bands);
+    return client.getAnalyzerBandLevels(bands);
+  }, [client]);
+
   // --- Subscriptions ---
 
   useEffect(() => {
@@ -121,7 +126,8 @@ export function VoxProvider(props: VoxProviderProps) {
       // Actions
       start,
       stop,
-      toggle
+      toggle,
+      getAnalyzerBandLevels
     };
   }, [client, sessionId, state, start, stop, toggle]);
 

@@ -96,9 +96,7 @@ function VoxSession({ token, sessionId }: { token: string, sessionId: string }) 
             <h3 className="mb-4 text-xs font-semibold uppercase tracking-wide text-blue-600">
               SDK Component: Widget
             </h3>
-            {/* The Widget handles its own visualization state */}
             <VoxWidget
-              bars={7}
               showPreview={false}
               className="w-full"
             />

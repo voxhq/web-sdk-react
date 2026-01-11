@@ -48,6 +48,8 @@ export type VoxContextValue = {
   stop: () => void;
   /** Toggles between start/stop based on current state. */
   toggle: () => void;
+  /** Get the current analyzer band levels. */
+  getAnalyzerBandLevels: (bands: number) => Float32Array;
 };
 
 export type VoxProviderProps = {
@@ -70,8 +72,6 @@ export type VoxProviderProps = {
 export type VoxWidgetProps = {
   /** Whether to show the live note preview text. Defaults to true. */
   showPreview?: boolean;
-  /** Number of visualizer bars to render. Defaults to 5. */
-  bars?: number;
   /** Custom labels for the various UI states. */
   labels?: Partial<Record<VoxStatus, string>>;
 

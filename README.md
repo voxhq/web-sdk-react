@@ -62,7 +62,6 @@ Pre-built recording controls with status indicator and visualizer.
 ```tsx
 <VoxWidget
   showPreview={true}   // Show note preview (default: true)
-  bars={5}             // Number of visualizer bars (default: 5)
   labels={{            // Custom status labels
     idle: "Ready",
     recording: "Listening...",
@@ -88,7 +87,6 @@ Standalone audio visualizer component.
 
 ```tsx
 <BarVisualizer 
-  bars={5}        // Number of bars
   size={24}       // Size in pixels
 />
 ```
@@ -112,15 +110,6 @@ const {
   stop,         // Stop recording
   toggle,       // Toggle recording state
 } = useVox();
-```
-
-### `useVoxVisualizer()`
-
-Get animated bar heights for custom visualizers.
-
-```tsx
-const bars = useVoxVisualizer(5, 80); // (barCount, intervalMs)
-// bars = [0.2, 0.8, 0.5, 0.9, 0.3] — values 0-1
 ```
 
 ## Token Generation

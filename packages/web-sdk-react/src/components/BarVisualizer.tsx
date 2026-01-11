@@ -1,48 +1,87 @@
-import React from "react";
-import { useVoxVisualizer } from "../hooks/useVoxVisualizer";
-import { cn } from "../cn";
+import { useEffect, useMemo, useRef } from "react";
+import { useVox } from "../hooks/useVox";
 
-export interface BarVisualizerProps {
+interface BarVisualizerProps {
+  /** Sets both width and height.
+   * @default 24
+   */
+  size?: number | string;
   /** Number of bars to render */
-  bars?: number;
-  /** Width of the visualizer in pixels */
-  size?: number;
-  /** Gap between bars in pixels */
-  gap?: number;
-  /** Bar color (CSS color or Tailwind class) */
+  bands?: number;
+  /** Color class for the bars (default: bg-white) */
+  colorClass?: string;
   className?: string;
 }
 
-/**
- * Animated bar visualizer that responds to recording state.
- * Uses the useVoxVisualizer hook for animation data.
- */
-export function BarVisualizer({
-  bars: barCount = 5,
-  size = 24,
-  gap = 2,
-  className,
-}: BarVisualizerProps) {
-  const bars = useVoxVisualizer(barCount);
+function mouthWeight(i: number, n: number) {
+  const x = n <= 1 ? 0 : (i / (n - 1)) * 2 - 1; // -1..+1
+  const w = Math.exp(-(x * x) / 0.25);
+  return 0.35 + 0.65 * w;
+}
 
-  const barWidth = (size - gap * (barCount - 1)) / barCount;
+export function BarVisualizer({
+  size = 24,
+  bands = 5,
+  colorClass = "bg-white",
+  className = "",
+}: BarVisualizerProps) {
+  const { getAnalyzerBandLevels } = useVox();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const weights = useMemo(
+    () => Array.from({ length: bands }, (_, i) => mouthWeight(i, bands)),
+    [bands]
+  );
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const bars = container.children as HTMLCollectionOf<HTMLElement>;
+    let frameId = 0;
+    let alive = true;
+
+    const loop = () => {
+      if (!alive) return;
+
+      const levels = getAnalyzerBandLevels(bands);
+      const n = Math.min(levels.length, bars.length);
+
+      for (let i = 0; i < n; i++) {
+        const v = levels[i] * weights[i];
+        bars[i].style.setProperty("--level", String(v));
+      }
+
+      frameId = requestAnimationFrame(loop);
+    };
+
+    frameId = requestAnimationFrame(loop);
+
+    return () => {
+      alive = false;
+      cancelAnimationFrame(frameId);
+    };
+  }, [getAnalyzerBandLevels, bands, weights]);
 
   return (
     <div
-      className={cn("flex items-center justify-center", className)}
-      style={{ width: size, height: size, gap }}
+      ref={containerRef}
+      className={`flex items-center justify-center gap-[2px] ${className}`}
+      style={{ width: size, height: size }}
     >
-      {bars.map((height, i) => (
-        <div
-          key={i}
-          className="bg-current rounded-full transition-[height] duration-75"
-          style={{
-            width: barWidth,
-            height: Math.max(4, height * size), // min 4px height
-          }}
-        />
+      {Array.from({ length: bands }).map((_, i) => (
+        <div key={i} className="flex-1 h-full min-w-[2px] relative">
+          <div
+            className={`absolute left-0 right-0 top-1/2 -translate-y-1/2 rounded-full ${colorClass}`}
+            style={{
+              // base thickness + dynamic growth (centered vertically)
+              height: "calc(20% + (var(--level, 0) * 80%))",
+              transition: "height 80ms linear",
+              willChange: "height",
+            }}
+          />
+        </div>
       ))}
     </div>
   );
 }
-

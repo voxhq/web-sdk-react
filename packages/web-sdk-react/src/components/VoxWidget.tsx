@@ -41,7 +41,6 @@ const DEFAULT_CONFIG: Record<VoxStatus, {
     btnHover: "hover:bg-amber-50",
     defaultLabel: "Connecting...",
   
-    // Loader2 is the standard spinner in Lucide
     icon: <Loader2 size={ICON_SIZE} className="animate-spin" />
   },
   recording: {
@@ -51,7 +50,7 @@ const DEFAULT_CONFIG: Record<VoxStatus, {
     btnHover: "hover:bg-rose-50",
     defaultLabel: "Capturing notes",
   
-    icon: <BarVisualizer size={ICON_SIZE} bars={5} />
+    icon: <BarVisualizer size={ICON_SIZE} />
   },
   writing: {
     bg: "bg-indigo-600",
@@ -60,7 +59,7 @@ const DEFAULT_CONFIG: Record<VoxStatus, {
     btnHover: "hover:bg-indigo-50",
     defaultLabel: "Finalizing notes...",
     
-    icon: <Sparkles size={ICON_SIZE} className="animate-bounce" />
+    icon: <Loader2 size={ICON_SIZE} className="animate-spin" />
   },
   ready: {
     bg: "bg-emerald-600",
