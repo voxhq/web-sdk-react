@@ -2,28 +2,16 @@ import React, { useMemo, useState } from "react";
 import type { Note } from "@voxhq/web-sdk";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { remarkAlert } from "remark-github-blockquote-alert";
 import { cn } from "../cn";
 import type { VoxNoteListProps } from "../types";
 
-function statusBadgeClass(status: Note["status"]) {
-  switch (status) {
-    case "ready":
-      return "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300";
-    case "generating":
-    case "pending":
-      return "bg-amber-500/10 text-amber-700 dark:text-amber-300";
-    case "failed":
-      return "bg-red-500/10 text-red-700 dark:text-red-300";
-    default:
-      return "bg-muted text-muted-foreground";
-  }
-}
-
-function toUpdatedAtString(updatedAt: Note["updatedAt"]) {
-  if (typeof updatedAt === "string") return updatedAt;
-  if (updatedAt instanceof Date) return updatedAt.toISOString();
-  return String(updatedAt);
-}
+const alertStyles: Record<string, string> = {
+  "markdown-alert-note": "border-blue-500 bg-blue-50 text-blue-800",
+  "markdown-alert-tip": "border-green-500 bg-green-50 text-green-800",
+  "markdown-alert-warning": "border-amber-500 bg-amber-50 text-amber-800",
+  "markdown-alert-caution": "border-red-500 bg-red-50 text-red-800",
+};
 
 export function VoxNoteList(props: VoxNoteListProps) {
   const {
@@ -54,49 +42,6 @@ export function VoxNoteList(props: VoxNoteListProps) {
 
   return (
     <div className={cn("grid gap-4 ", className)} {...rest}>
-      {/* List panel */}
-      {/* <div className="rounded-xl border bg-background">
-        <div className="border-b px-3 py-2 text-sm font-medium">{listTitle}</div>
-        <div className="p-2">
-          {notes.length === 0 ? (
-            <div className="px-2 py-6 text-sm text-muted-foreground">No notes yet.</div>
-          ) : (
-            <div className="space-y-1">
-              {notes.map((n) => {
-                const isActive = n.id === activeId;
-                return (
-                  <button
-                    key={n.id}
-                    type="button"
-                    onClick={() => select(n.id)}
-                    className={cn(
-                      "w-full rounded-lg border px-2 py-2 text-left transition-colors",
-                      "hover:bg-muted",
-                      isActive ? "border-primary/40 bg-muted" : "border-transparent"
-                    )}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="truncate text-sm font-medium">{n.name}</div>
-                      <span
-                        className={cn(
-                          "shrink-0 rounded-full px-2 py-0.5 text-xs font-medium",
-                          statusBadgeClass(n.status)
-                        )}
-                      >
-                        {n.status}
-                      </span>
-                    </div>
-                    <div className="mt-1 truncate text-xs text-muted-foreground">
-                      {toUpdatedAtString(n.updatedAt)}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div> */}
-
       {/* Preview panel */}
       {showPreview ? (
         <div className="rounded-xl border bg-background">
@@ -113,7 +58,33 @@ export function VoxNoteList(props: VoxNoteListProps) {
               </div>
             ) : (
               <article className="prose prose-sm max-w-none dark:prose-invert">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm, remarkAlert]}
+                  components={{
+                    div: ({ className, children, ...props }) => {
+                      if (className?.includes("markdown-alert")) {
+                        const typeClass = className.split(" ").find(c => c.startsWith("markdown-alert-")) || "";
+                        const style = alertStyles[typeClass] || "border-gray-500 bg-gray-50";
+                        return (
+                          <div className={`mb-4 rounded-md border-l-4 p-4 text-sm ${style} ${className}`} {...props}>
+                            {children}
+                          </div>
+                        );
+                      }
+                      return <div className={className} {...props}>{children}</div>;
+                    },
+                    p: ({ className, children, ...props }) => {
+                      if (className?.includes("markdown-alert-title")) {
+                        return (
+                          <p className={`mb-1 font-semibold flex items-center gap-2 [&>svg]:fill-current [&>svg]:text-current ${className}`} {...props}>
+                            {children}
+                          </p>
+                        );
+                      }
+                      return <p className={className} {...props}>{children}</p>
+                   }
+                  }}
+                >
                   {active.content || ""}
                 </ReactMarkdown>
               </article>
