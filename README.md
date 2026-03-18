@@ -117,7 +117,7 @@ const {
 Tokens must be generated on your backend using your API key:
 
 ```bash
-curl -X POST https://connect.voxdenta.com/auth/token \
+curl -X POST https://api.voxdenta.com/auth/token \
   -H "x-api-key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"sessionId": "/user_123/appt_456"}'

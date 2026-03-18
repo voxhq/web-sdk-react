@@ -33,7 +33,7 @@ export function tokenProxyPlugin(): Plugin {
           const sessionId = `/user_${crypto.randomUUID()}/appt_${crypto.randomUUID()}`;
 
           // Generate token on the server using the env API key
-          const response = await fetch('https://connect.voxdenta.com/auth/token', {
+          const response = await fetch('https://api.voxdenta.com/auth/token', {
             method: 'POST',
             headers: {
               'x-api-key': apiKey,

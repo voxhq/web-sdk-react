@@ -109,7 +109,7 @@ If you prefer to generate tokens manually instead of using the Vite plugin:
 
 ```bash
 curl --request POST \
-  --url https://connect.voxdenta.com/auth/token \
+  --url https://api.voxdenta.com/auth/token \
   --header 'x-api-key: <YOUR_API_KEY>' \
   --header 'Content-Type: application/json' \
   --data '{
