@@ -69,7 +69,7 @@ importers:
   packages/web-sdk-react:
     dependencies:
       '@voxhq/web-sdk':
-        specifier: 0.0.4
+        specifier: ^0.0.4
         version: 0.0.4
       lucide-react:
         specifier: ^0.562.0
