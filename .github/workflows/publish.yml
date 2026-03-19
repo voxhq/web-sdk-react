@@ -2,6 +2,11 @@ name: Publish
 
 # Triggered by tags like: @voxhq/web-sdk-react@0.1.3
 # Or manually via workflow_dispatch
+#
+# Uses npm Trusted Publishing (OIDC) — no NPM_TOKEN needed. One-time setup on npmjs.com:
+# Package @voxhq/web-sdk-react → Settings → Trusted Publisher → GitHub Actions →
+# Workflow filename: publish.yml, Environment name: production
+# https://docs.npmjs.com/trusted-publishers
 
 on:
   push:
@@ -15,9 +20,10 @@ jobs:
   publish:
     name: Publish @voxhq/web-sdk-react
     runs-on: ubuntu-latest
+    environment: production
     permissions:
       contents: read
-      id-token: write
+      id-token: write  # Required for npm Trusted Publishing (OIDC)
     steps:
       - uses: actions/checkout@v4
 
@@ -29,14 +35,24 @@ jobs:
         with:
           node-version: '22'
           cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
+
+      - name: Ensure npm 11.5.1+ for Trusted Publishing (OIDC)
+        run: npm install -g npm@11.5.1
 
       - run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm --filter @voxhq/web-sdk-react build
 
-      - name: Publish to npm
-        run: pnpm --filter @voxhq/web-sdk-react publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to npm (OIDC)
+        run: |
+          unset NODE_AUTH_TOKEN NPM_TOKEN
+          echo "npm version: $(npm -v)"
+          if [ -z "$ACTIONS_ID_TOKEN_REQUEST_URL" ]; then echo "::error::OIDC not available (missing ACTIONS_ID_TOKEN_REQUEST_URL). Check id-token: write permission."; exit 1; fi
+          cd packages/web-sdk-react && npm publish --no-git-checks 2>&1 | tee publish.log
+          exitcode=${PIPESTATUS[0]}
+          if [ $exitcode -ne 0 ] && (grep -q "you cannot publish over the previously published" publish.log || grep -q "no new packages" publish.log); then
+            echo "::notice::Version already published, nothing to do"
+            exit 0
+          fi
+          exit $exitcode
